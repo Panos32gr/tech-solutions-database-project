@@ -2,7 +2,6 @@ import tkinter.messagebox
 from tkinter import *
 from random import *
 import sqlite3
-import time
 
 guest_flag = False
 transition_flag = False
