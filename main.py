@@ -2,10 +2,11 @@ import tkinter.messagebox
 from tkinter import *
 from random import *
 import sqlite3
-import time
+from datetime import *
 
 guest_flag = False
 transition_flag = False
+
 if transition_flag == False:
     # admin database and data table creation
     adminlogincon = sqlite3.connect("admins.db")
@@ -140,7 +141,8 @@ if transition_flag:
             Address INTEGER NOT NULL,
             Email TEXT NOT NULL UNIQUE,
             Phone TEXT NOT NULL,
-            Services TEXT NOT NULL
+            Services TEXT NOT NULL,
+            registered TEXT NOT NULL
     )""")
     x.execute(table)
     conn.commit()
@@ -224,8 +226,10 @@ if transition_flag:
             eml = d4.get()
             telephone = d5.get()
             work = d6.get("1.0", "end-1c")
-            data_query = "INSERT INTO clients VALUES (?,?,?,?,?,?,?)"
-            data_tuple = (client_number_import, name, surname, addrs, eml, telephone, work)
+            date_time_string = datetime.now()
+            date_time_string.strftime("%d/%m/%Y %H:%M:%S")
+            data_query = "INSERT INTO clients VALUES (?,?,?,?,?,?,?,?)"
+            data_tuple = (client_number_import, name, surname, addrs, eml, telephone, work, date_time_string)
             x.execute(data_query, data_tuple)
             conn.commit()
             toplvlclose()
@@ -266,7 +270,7 @@ if transition_flag:
             def obtain_data(cl_num):
                 p1 = 0
                 p2 = 0
-                key_list = ["Client number:", "First Name:", "Last Name:", "Address:", "E-mail:", "Phone:", "Services:"]
+                key_list = ["Client number:", "First Name:", "Last Name:", "Address:", "E-mail:", "Phone:", "Services:", "Registration Date & time:"]
                 client_number = cl_num.get()
                 try:
                     number_search = f"""SELECT * FROM clients WHERE Clientnumber = {client_number}"""
@@ -313,7 +317,7 @@ if transition_flag:
                                 edit_entry = Entry(edit_host, width=40)
                                 edit_entry.place(x=50, y=200)
                                 edit_config = Button(edit_host, text="Edit", width=20, command=lambda: changeinfo(alterations=edit_entry, fourdigit=client_number))
-                                edit_config.place(x=350, y=350)
+                                edit_config.place(x=200, y=350)
                         def changeinfo(alterations, fourdigit):
                             new_info = alterations.get()
                             db_connection = sqlite3.connect("clients.db")
